@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt' // 注释处理
+apply plugin: 'realm-android'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    dataBinding {
+        enabled = true
+    }
+    defaultConfig {
+        applicationId "com.zero.dibreak"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:appcompat-v7:$rootProject.supportVersion"
+    compile "com.android.support:design:$rootProject.supportVersion"
+    compile "com.android.support:support-v4:$rootProject.supportVersion"
+    compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+}
