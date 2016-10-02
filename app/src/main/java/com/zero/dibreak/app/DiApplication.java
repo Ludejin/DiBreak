@@ -18,7 +18,7 @@ import io.realm.RealmConfiguration;
  */
 
 public class DiApplication extends Application {
-    private static final String TAG = "DjApplication";
+    private static final String TAG = "DiApplication";
 
     private ApplicationComponent mApplicationComponent;
     private static DiApplication sInstance;

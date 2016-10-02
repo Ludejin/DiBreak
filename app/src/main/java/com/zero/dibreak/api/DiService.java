@@ -12,7 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Created by Jin_ on 2016/9/23
@@ -21,9 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DiService {
 
-//    private static final String API_DEV_URL = "http://192.168.1.102:3721/gsjk/";
-    private static final String API_DEV_URL = "http://192.168.10.52:3721/gsjk/";
-    private static final String API_PRODUCT_URL = "http://www.creawor.com:59087/gsjk-1.0/";
+    private static final String API_DEV_URL = "";
+    private static final String API_PRODUCT_URL = "";
 
     private boolean IS_DEV = true;
 
@@ -69,7 +68,7 @@ public class DiService {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(IS_DEV ? API_DEV_URL : API_PRODUCT_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(getClient());
 
         if (useRxJava) {
@@ -94,7 +93,10 @@ public class DiService {
         return SingletonHolder.INSTANCE;
     }
 
-    public DiApi getBrApi() {
+    public DiApi getDiApi() {
+        if (null == mApi) {
+            mApi = mRetrofit.create(DiApi.class);
+        }
         return mApi;
     }
 }
