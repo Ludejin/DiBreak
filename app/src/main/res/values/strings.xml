@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">My Application</string>
 
+    <!-- 错误信息 -->
+    <string name="exception_message_generic">请求发生错误</string>
+    <string name="exception_message_no_connection">网络连接失败</string>
+    <string name="exception_message_time_out">连接超时</string>
+    <string name="exception_message_not_found">未知错误</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
