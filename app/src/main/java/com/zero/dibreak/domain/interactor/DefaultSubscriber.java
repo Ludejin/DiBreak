@@ -55,22 +55,11 @@ public class DefaultSubscriber<T> extends Subscriber<T> {
         if (exception instanceof ResponseException) {
             ResponseException responseException = (ResponseException) exception;
             switch (responseException.getStatusCode()) {
-                case ResponseException.ERROR_CODE_NEED_LOGIN:
-                    /**
-                     *  session失效，重新登录
-                     */
-                    handled = true;
-                    break;
-                case ResponseException.ERROR_CODE_NEED_PERFECT_PROFILE:
-
-                    handled = true;
-                    break;
-                case ResponseException.ERROR_CODE_NEED_THIRD_PARTY_BIND:
+                case ResponseException.STATUS_CODE_FAIL:
                     handled = true;
                     break;
             }
         }
-        handled = true;
         return handled;
     }
 

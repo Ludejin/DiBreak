@@ -21,8 +21,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class DiService {
 
-    private static final String API_DEV_URL = "";
-    private static final String API_PRODUCT_URL = "";
+    private static final String API_DEV_URL = "http://gank.io/api/";
+    private static final String API_PRODUCT_URL = "http://gank.io/api/";
 
     private boolean IS_DEV = true;
 

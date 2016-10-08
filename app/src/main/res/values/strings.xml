@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Gank</string>
 
     <!-- 错误信息 -->
     <string name="exception_message_generic">请求发生错误</string>

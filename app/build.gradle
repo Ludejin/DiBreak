@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -51,7 +51,6 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportVersion"
     compile "com.android.support:support-v4:$rootProject.supportVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportVersion"
-
     compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
     compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
@@ -60,4 +59,5 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
 }

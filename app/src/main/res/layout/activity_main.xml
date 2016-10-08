@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
     tools:openDrawer="start">
 
     <include
@@ -19,8 +19,41 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer"/>
+        app:menu="@menu/activity_main_drawer">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="#ffffff">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="设置"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="1.0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="14.0dip"
+                    android:layout_marginTop="14.0dip"
+                    android:background="#fff1f1f1"/>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="退出应用"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

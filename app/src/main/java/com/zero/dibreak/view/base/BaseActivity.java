@@ -15,8 +15,9 @@ import com.zero.dibreak.di.module.ActivityModule;
  * 邮箱：Jin_Zboy@163.com
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     private ActivityModule mActivityModule;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

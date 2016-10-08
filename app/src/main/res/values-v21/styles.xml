@@ -1,4 +1,13 @@
 <resources>
+    <style name="AppTheme" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">@dimen/dp_0</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
