@@ -1,7 +1,9 @@
 package com.zero.dibreak.domain.model.base;
 
 
-import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 /**
  * Created by Jin_ on 2016/9/23
@@ -10,11 +12,11 @@ import com.fasterxml.jackson.annotation.JacksonInject;
 
 public class BaseResponse<T> {
 
-    @JacksonInject("error")
+    @JsonProperty("error")
     private boolean error;
 
-    @JacksonInject("results")
-    private T data;
+    @JsonProperty("results")
+    private List<T> data;
 
     public boolean isError() {
         return error;
@@ -24,11 +26,11 @@ public class BaseResponse<T> {
         this.error = error;
     }
 
-    public T getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 

@@ -9,7 +9,9 @@
         <item name="android:actionBarSize">@dimen/dp_48</item>
         <item name="actionBarSize">@dimen/dp_48</item>
 
-        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+
+        <item name="android:actionMenuTextColor">@color/colorPrimary</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_small</item>
 

@@ -1,63 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:openDrawer="start">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include
-        layout="@layout/app_bar_main"
+    <android.support.v4.widget.DrawerLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer">
+        android:background="@color/colorPrimary"
+        tools:openDrawer="start">
 
-        <RelativeLayout
+        <include
+            android:id="@+id/bar_main"
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"/>
 
-            <LinearLayout
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/normalBackground"
+            app:headerLayout="@layout/nav_header_main"
+            app:itemIconTint="@color/colorPrimary"
+            app:itemTextColor="@color/colorPrimary"
+            app:menu="@menu/activity_main_drawer">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="#ffffff">
+                android:layout_height="match_parent">
 
-                <android.support.v7.widget.AppCompatButton
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:text="设置"
-                    android:textSize="16sp"/>
+                    android:layout_alignParentBottom="true"
+                    android:background="@android:color/white">
 
-                <View
-                    android:layout_width="1.0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_marginBottom="14.0dip"
-                    android:layout_marginTop="14.0dip"
-                    android:background="#fff1f1f1"/>
+                    <android.support.v7.widget.AppCompatButton
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground"
+                        android:text="设 置"
+                        android:textSize="16sp"/>
 
-                <android.support.v7.widget.AppCompatButton
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:text="退出应用"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-        </RelativeLayout>
-    </android.support.design.widget.NavigationView>
+                    <View
+                        android:layout_width="@dimen/dp_1"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/dp_4"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:background="@color/normalBackground"/>
 
-</android.support.v4.widget.DrawerLayout>
+                    <android.support.v7.widget.AppCompatButton
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground"
+                        android:text="退出应用"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.design.widget.NavigationView>
+
+    </android.support.v4.widget.DrawerLayout>
+</layout>

@@ -1,6 +1,6 @@
 package com.zero.dibreak.domain.model.response;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -23,9 +23,8 @@ public class Sister extends RealmObject {
      * used : true
      * who : daimajia
      */
-
-    @JacksonInject("_id")
     @PrimaryKey
+    @JsonProperty("_id")
     private String id;
 
     private String createdAt;
