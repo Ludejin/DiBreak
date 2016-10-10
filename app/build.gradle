@@ -60,4 +60,5 @@ dependencies {
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
+    compile "com.facebook.fresco:fresco:$rootProject.frescoVersion"
 }

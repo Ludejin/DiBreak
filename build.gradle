@@ -37,7 +37,7 @@ ext {
     daggerVersion = '2.7'
 
     okHttpVersion = '3.4.1'
-    frescoVersion = '0.12.0'
+    frescoVersion = '0.14.1'
     rxAndroidVersion = '1.2.1'
     rxJavaVersion = '1.2.0'
 }

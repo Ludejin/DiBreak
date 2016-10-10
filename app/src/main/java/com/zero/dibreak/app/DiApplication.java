@@ -3,6 +3,7 @@ package com.zero.dibreak.app;
 import android.app.Application;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.zero.dibreak.common.Const;
 import com.zero.dibreak.di.components.ApplicationComponent;
 import com.zero.dibreak.di.components.DaggerApplicationComponent;
@@ -30,8 +31,11 @@ public class DiApplication extends Application {
 
         /** 初始化Realm配置 */
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
                 .name(Const.DB_NAME).build();
         Realm.setDefaultConfiguration(realmConfiguration);
+
+        Fresco.initialize(this);
 
         initInjector();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
