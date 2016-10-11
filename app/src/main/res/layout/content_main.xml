@@ -13,6 +13,7 @@
         tools:showIn="@layout/app_bar_main">
 
         <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ref_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

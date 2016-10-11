@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -25,14 +26,16 @@ import com.zero.dibreak.domain.model.response.Sister;
 import com.zero.dibreak.view.base.BaseActivity;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ActivityMainBinding mMainBinding;
+
+    private SingleTypeAdapter<Sister> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,8 +59,10 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mMainBinding.barMain.contentMain.recycleView.setLayoutManager(new LinearLayoutManager(this));
-        final SingleTypeAdapter<Sister> adapter = new SingleTypeAdapter<Sister>(this, R.layout.item_sister);
+        adapter = new SingleTypeAdapter<Sister>(this, R.layout.item_sister);
         mMainBinding.barMain.contentMain.recycleView.setAdapter(adapter);
+
+        mMainBinding.barMain.contentMain.refLayout.setOnRefreshListener(this);
 
         getApplicationComponent().getDjService().getDiApi().getSister()
                 .compose(RepositoryUtils.<BaseResponse<Sister>>handleData())
@@ -126,5 +131,26 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        getApplicationComponent().getDjService().getDiApi().getSister()
+                .compose(RepositoryUtils.<BaseResponse<Sister>>handleData())
+                .subscribe(new DefaultSubscriber<BaseResponse<Sister>>(getContext()) {
+                    @Override
+                    public void onNext(BaseResponse<Sister> sisterBaseResponse) {
+                        Log.i("MainActivity", sisterBaseResponse.getData().size() + "==="
+                                + sisterBaseResponse.getData().get(0).getDesc());
+                        adapter.set(sisterBaseResponse.getData());
+                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
+                    }
+                });
     }
 }
