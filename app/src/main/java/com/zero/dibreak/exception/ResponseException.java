@@ -24,10 +24,9 @@ public class ResponseException extends Exception {
         mStatusCode = response.getCode();
         /**
          *
-         * 根据Code处理错误信息
+         * 根据StatusCode处理错误信息，什么StatusCode提示什么错误
          *
          */
-
     }
 
     /**

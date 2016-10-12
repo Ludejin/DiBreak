@@ -3,7 +3,6 @@ package com.zero.dibreak.domain.interactor;
 import android.content.Context;
 import android.util.Log;
 
-import com.zero.dibreak.R;
 import com.zero.dibreak.common.utils.NetWorkUtils;
 import com.zero.dibreak.common.utils.ToastUtils;
 import com.zero.dibreak.domain.exception.DefaultErrorBundle;
@@ -37,9 +36,8 @@ public class DefaultSubscriber<T> extends Subscriber<T> {
     public void onStart() {
         super.onStart();
         if (!NetWorkUtils.isNetworkConnected()) {
-            onError(new NetworkConnectionException(getContext()
-                    .getString(R.string.exception_message_no_connection)));
-            unsubscribe();
+            onError(new NetworkConnectionException());
+            if (!isUnsubscribed()) unsubscribe();
         }
     }
 
@@ -56,7 +54,7 @@ public class DefaultSubscriber<T> extends Subscriber<T> {
             }
             showErrorMessage(new DefaultErrorBundle((Exception) e));
         } else {
-            showErrorMessage(e.getMessage());
+            showErrorMessage(new DefaultErrorBundle((NetworkConnectionException) e));
         }
     }
 

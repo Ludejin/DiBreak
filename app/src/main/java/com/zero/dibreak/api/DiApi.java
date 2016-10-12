@@ -12,6 +12,6 @@ import rx.Observable;
  */
 
 public interface DiApi {
-    @GET("random/data/福利/" + 10)
+    @GET("random/data/福利/" + 15)
     Observable<BaseResponse<Sister>> getSister();
 }
