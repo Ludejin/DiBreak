@@ -11,4 +11,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- menu item -->
+    <string name="menu_sister">妹子福利</string>
+    <string name="menu_category">分类查看</string>
+    <string name="menu_collection">我的收藏</string>
+    <string name="menu_about_author">关于作者</string>
+
+    <string name="author_and_time">%1$s&#160;%2$s</string>
 </resources>

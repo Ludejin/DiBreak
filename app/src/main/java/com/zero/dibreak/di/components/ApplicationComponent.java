@@ -23,5 +23,5 @@ public interface ApplicationComponent {
 
     Context context();
 
-    DiService getDjService();
+    DiService getDiService();
 }

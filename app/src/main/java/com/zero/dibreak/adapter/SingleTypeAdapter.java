@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.zero.dibreak.viewholder.BindingViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +28,6 @@ public class SingleTypeAdapter<T> extends BaseViewAdapter<T> {
 
     public SingleTypeAdapter(Context context, int layoutRes) {
         super(context);
-        mCollection = new ArrayList<>();
         mLayoutRes = layoutRes;
     }
 

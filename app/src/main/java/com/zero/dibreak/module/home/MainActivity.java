@@ -1,5 +1,6 @@
 package com.zero.dibreak.module.home;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +23,7 @@ import com.zero.dibreak.databinding.ActivityMainBinding;
 import com.zero.dibreak.domain.interactor.DefaultSubscriber;
 import com.zero.dibreak.domain.model.base.BaseResponse;
 import com.zero.dibreak.domain.model.response.Sister;
+import com.zero.dibreak.module.category.CategoryActivity;
 import com.zero.dibreak.view.base.BaseActivity;
 
 public class MainActivity extends BaseActivity
@@ -31,14 +32,23 @@ public class MainActivity extends BaseActivity
     private ActivityMainBinding mMainBinding;
 
     private SingleTypeAdapter<Sister> adapter;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        init();
+
+        getData(15);
+    }
+
+    private void init() {
+        Toolbar toolbar = mMainBinding.barMain.toolbar;
         setSupportActionBar(toolbar);
+
+        mDrawerLayout = mMainBinding.drawerLayout;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -49,13 +59,13 @@ public class MainActivity extends BaseActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = mMainBinding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = mMainBinding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
         mMainBinding.barMain.contentMain.recycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -63,15 +73,27 @@ public class MainActivity extends BaseActivity
         mMainBinding.barMain.contentMain.recycleView.setAdapter(adapter);
 
         mMainBinding.barMain.contentMain.refLayout.setOnRefreshListener(this);
+    }
 
-        getApplicationComponent().getDjService().getDiApi().getSister()
+    /**
+     * 获取数据
+     * @see com.zero.dibreak.api.DiApi#getSister(int)
+     * @param pageSize  一页显示的数据
+     */
+    private void getData(int pageSize) {
+        getApplicationComponent().getDiService().getDiApi().getSister(pageSize)
                 .compose(RepositoryUtils.<BaseResponse<Sister>>handleData())
                 .subscribe(new DefaultSubscriber<BaseResponse<Sister>>(getContext()) {
                     @Override
                     public void onNext(BaseResponse<Sister> sisterBaseResponse) {
-                        Log.i("MainActivity", sisterBaseResponse.getData().size() + "==="
-                                + sisterBaseResponse.getData().get(0).getDesc());
                         adapter.set(sisterBaseResponse.getData());
+                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
                     }
                 });
     }
@@ -95,12 +117,8 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -111,46 +129,20 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (id == R.id.nav_category) {
+            Intent intent = new Intent();
+            intent.setClass(this, CategoryActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_collection) {
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override
     public void onRefresh() {
-        getApplicationComponent().getDjService().getDiApi().getSister()
-                .compose(RepositoryUtils.<BaseResponse<Sister>>handleData())
-                .subscribe(new DefaultSubscriber<BaseResponse<Sister>>(getContext()) {
-                    @Override
-                    public void onNext(BaseResponse<Sister> sisterBaseResponse) {
-                        Log.i("MainActivity", sisterBaseResponse.getData().size() + "==="
-                                + sisterBaseResponse.getData().get(0).getDesc());
-                        adapter.set(sisterBaseResponse.getData());
-                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        mMainBinding.barMain.contentMain.refLayout.setRefreshing(false);
-                    }
-                });
+        getData(15);
     }
 }

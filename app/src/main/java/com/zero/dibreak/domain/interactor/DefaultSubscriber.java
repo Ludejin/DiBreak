@@ -48,14 +48,13 @@ public class DefaultSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
+        e.printStackTrace();
         if (handleCommonResponseError((Exception) e)) {
             if (e != null && e.getMessage() != null) {
                 Log.w(TAG, e.getMessage());
             }
-            showErrorMessage(new DefaultErrorBundle((Exception) e));
-        } else {
-            showErrorMessage(new DefaultErrorBundle((NetworkConnectionException) e));
         }
+        showErrorMessage(new DefaultErrorBundle((Exception) e));
     }
 
     @Override

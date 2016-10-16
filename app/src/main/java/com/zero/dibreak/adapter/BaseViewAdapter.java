@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import com.android.databinding.library.baseAdapters.BR;
 import com.zero.dibreak.viewholder.BindingViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,6 +33,7 @@ public abstract class BaseViewAdapter<T> extends RecyclerView.Adapter<BindingVie
     }
 
     public BaseViewAdapter(Context context) {
+        mCollection = new ArrayList<>();
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

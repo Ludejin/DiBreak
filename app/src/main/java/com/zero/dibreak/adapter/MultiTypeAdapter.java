@@ -34,6 +34,7 @@ public class MultiTypeAdapter extends BaseViewAdapter<Object> {
 
     public MultiTypeAdapter(Context context, Map<Integer, Integer> viewTypeToLayoutMap) {
         super(context);
+
         mCollectionViewType = new ArrayList<>();
         if (viewTypeToLayoutMap != null && !viewTypeToLayoutMap.isEmpty()) {
             mItemTypeToLayoutMap.putAll(viewTypeToLayoutMap);
