@@ -88,19 +88,20 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
     /**
      * 获取数据
-     * @see com.zero.dibreak.api.DiApi#getCategoryList(String, int, int)
      *
-     * @param page      页码
-     * @param pageSize  一页显示的数据
+     * @param page     页码
+     * @param pageSize 一页显示的数据
+     * @see com.zero.dibreak.api.DiApi#getCategoryList(String, int, int)
      */
-    private void getData(int page, int pageSize) {
+    private void getData(int pageSize, int page) {
         DiApplication.getInstance().getApplicationComponent().getDiService()
-                .getDiApi().getCategoryList(getCategoryTypeName(mCategoryType), page, pageSize)
+                .getDiApi().getCategoryList(getCategoryTypeName(mCategoryType), pageSize, page)
                 .compose(RepositoryUtils.<BaseResponse<ItemInfo>>handleData())
                 .subscribe(new DefaultSubscriber<BaseResponse<ItemInfo>>(_mActivity) {
                     @Override
                     public void onNext(BaseResponse<ItemInfo> itemInfoBaseResponse) {
-                        mMultiTypeAdapter.addAll(itemInfoBaseResponse.getData(),
+                        mCategoryBinding.refLayout.setRefreshing(false);
+                        mMultiTypeAdapter.set(itemInfoBaseResponse.getData(),
                                 new MultiTypeAdapter.MultiViewTyper() {
                                     @Override
                                     public int getViewType(Object item) {
@@ -119,7 +120,8 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
     @Override
     protected void fetchData() {
-        getData(1, 15);
+        mCategoryBinding.refLayout.setRefreshing(true);
+        getData(15, 1);
     }
 
     @Override
@@ -131,6 +133,6 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        getData(1, 15);
+        getData(15, 1);
     }
 }
