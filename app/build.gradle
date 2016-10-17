@@ -46,7 +46,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-
     compile "com.android.support:appcompat-v7:$rootProject.supportVersion"
     compile "com.android.support:design:$rootProject.supportVersion"
     compile "com.android.support:support-v4:$rootProject.supportVersion"
@@ -59,6 +58,6 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-
     compile "com.facebook.fresco:fresco:$rootProject.frescoVersion"
+    compile files('libs/tbs_sd_v2.4.0.1073.jar')
 }

@@ -1,5 +1,6 @@
 package com.zero.dibreak.module.category;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.zero.dibreak.databinding.FragmentCategoryBinding;
 import com.zero.dibreak.domain.interactor.DefaultSubscriber;
 import com.zero.dibreak.domain.model.base.BaseResponse;
 import com.zero.dibreak.domain.model.response.ItemInfo;
+import com.zero.dibreak.module.detail.DetailActivity;
 import com.zero.dibreak.view.base.LazyFragment;
 
 /**
@@ -59,8 +61,16 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
         mMultiTypeAdapter.addViewTypeToLayoutMap(VIEW_TYPE_NORMAL, R.layout.item_category);
         mMultiTypeAdapter.addViewTypeToLayoutMap(VIEW_TYPE_WITH_IMG, R.layout.item_category_img);
         mCategoryBinding.recycleView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        mMultiTypeAdapter.setPresenter(new MultiTypeAdapter.Presenter<ItemInfo>() {
+            @Override
+            public void onItemClick(ItemInfo itemInfo) {
+                Intent intent = new Intent();
+                intent.setClass(_mActivity, DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_URL, itemInfo.getUrl());
+                startActivity(intent);
+            }
+        });
         mCategoryBinding.recycleView.setAdapter(mMultiTypeAdapter);
-
         mCategoryBinding.refLayout.setOnRefreshListener(this);
     }
 
@@ -128,7 +138,12 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false);
         init();
+        initEvent();
         return mCategoryBinding.getRoot();
+    }
+
+    private void initEvent() {
+
     }
 
     @Override

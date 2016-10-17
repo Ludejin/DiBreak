@@ -24,6 +24,8 @@
 
 package com.zero.dibreak.common.utils;
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -113,6 +115,7 @@ public class DateUtils {
         Date now = new Date();
         long time = now.getTime() - date.getTime();
         String str = "很久了";
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String mmDate = format.format(date);
         if (time / 1000 / 60 <= 3) {
@@ -134,6 +137,7 @@ public class DateUtils {
     }
 
     public static String getDateDesc(String dateStr) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = null;
         try {

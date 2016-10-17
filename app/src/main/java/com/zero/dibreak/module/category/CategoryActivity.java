@@ -39,7 +39,7 @@ public class CategoryActivity extends BackActivity {
 
     @Override
     protected Toolbar setToolbar() {
-        return mCategoryBinding.toolbar;
+        return mCategoryBinding.incToolbar.toolbar;
     }
 
     @Override

@@ -20,6 +20,10 @@ import java.util.Map;
 
 public class MultiTypeAdapter extends BaseViewAdapter<Object> {
 
+    public interface Presenter<T> extends BaseViewAdapter.Presenter {
+        void onItemClick(T t);
+    }
+
     public interface MultiViewTyper {
         int getViewType(Object item);
     }

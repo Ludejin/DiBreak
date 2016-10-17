@@ -9,12 +9,18 @@
         <variable
             name="item"
             type="com.zero.dibreak.domain.model.response.ItemInfo"/>
+
+        <variable
+            name="presenter"
+            type="com.zero.dibreak.adapter.MultiTypeAdapter.Presenter"/>
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_4">
+        android:layout_margin="@dimen/dp_4"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> presenter.onItemClick(item)}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,16 +55,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dp_6"
-                    android:textColor="@color/material_grey_400"
-                    android:text="@{item.type}"/>
+                    android:text="@{item.type}"
+                    android:textColor="@color/material_grey_400"/>
 
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/material_grey_400"
                     android:padding="@dimen/dp_6"
-                    android:text="@{@string/author_and_time(item.who,DateUtils.getDateDesc(item.publishedAt))}"/>
+                    android:text="@{@string/author_and_time(item.who,DateUtils.getDateDesc(item.publishedAt))}"
+                    android:textColor="@color/material_grey_400"/>
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

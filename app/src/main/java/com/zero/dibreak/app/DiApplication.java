@@ -2,8 +2,11 @@ package com.zero.dibreak.app;
 
 import android.app.Application;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.TbsListener;
 import com.zero.dibreak.common.Const;
 import com.zero.dibreak.di.components.ApplicationComponent;
 import com.zero.dibreak.di.components.DaggerApplicationComponent;
@@ -37,8 +40,43 @@ public class DiApplication extends Application {
 
         Fresco.initialize(this);
 
+        initWebView();
+
         initInjector();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    private void initWebView() {
+        QbSdk.PreInitCallback callback = new QbSdk.PreInitCallback() {
+            @Override
+            public void onCoreInitFinished() {
+
+            }
+
+            @Override
+            public void onViewInitFinished(boolean b) {
+
+            }
+        };
+
+        QbSdk.setTbsListener(new TbsListener() {
+            @Override
+            public void onDownloadFinish(int i) {
+                Log.d("apptbs","onDownloadFinish");
+            }
+
+            @Override
+            public void onInstallFinish(int i) {
+                Log.d("apptbs","onInstallFinish");
+            }
+
+            @Override
+            public void onDownloadProgress(int i) {
+                Log.d("apptbs","onDownloadProgress:"+i);
+            }
+        });
+
+        QbSdk.initX5Environment(getApplicationContext(),  callback);
     }
 
     public static DiApplication getInstance() {
