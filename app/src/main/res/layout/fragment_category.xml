@@ -11,10 +11,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.zero.loadmore.LoadMoreRecyclerView
-                android:id="@+id/recycle_view"
+            <com.zero.progressstatelayout.ProgressStateLayout
+                android:id="@+id/stateLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+
+                <com.zero.loadmore.LoadMoreRecyclerView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.zero.progressstatelayout.ProgressStateLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

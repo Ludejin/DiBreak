@@ -22,6 +22,7 @@ import com.zero.dibreak.module.detail.DetailActivity;
 import com.zero.dibreak.view.base.LazyFragment;
 import com.zero.loadmore.LoadMoreListener;
 import com.zero.loadmore.LoadMoreRecyclerView;
+import com.zero.progressstatelayout.ProgressStateLayout;
 
 /**
  * Created by Jin_ on 2016/10/16
@@ -50,6 +51,7 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
      */
     private LoadMoreRecyclerView mRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
+    private ProgressStateLayout mStateLayout;
 
     public static CategoryPagerFragment newInstance(int position) {
         CategoryPagerFragment fragment = new CategoryPagerFragment();
@@ -71,6 +73,8 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
         mRecyclerView = mCategoryBinding.recycleView;
         mRefreshLayout = mCategoryBinding.refLayout;
+        mStateLayout = mCategoryBinding.stateLayout;
+        mStateLayout.bindView(mRecyclerView);
 
         mMultiTypeAdapter = new MultiTypeAdapter(_mActivity);
         mMultiTypeAdapter.addViewTypeToLayoutMap(VIEW_TYPE_NORMAL, R.layout.item_category);
@@ -148,10 +152,14 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
                 .subscribe(new DefaultSubscriber<BaseResponse<ItemInfo>>(_mActivity) {
                     @Override
                     public void onNext(BaseResponse<ItemInfo> itemInfoBaseResponse) {
+                        mStateLayout.showSuccess();
                         if (isRefresh) {
+                            if (0 == itemInfoBaseResponse.getData().size()) {
+                                mStateLayout.showEmpty("没有数据");
+                                return;
+                            }
                             mRefreshLayout.setRefreshing(false);
                             mMultiTypeAdapter.set(itemInfoBaseResponse.getData(), getMultiViewTyper());
-
                         } else {
                             if (0 == itemInfoBaseResponse.getData().size()) {
                                 mRecyclerView.loadMoreEnd();
@@ -161,12 +169,19 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
                             }
                         }
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isRefresh) {
+                            mStateLayout.showError();
+                        }
+                    }
                 });
     }
 
     @Override
     protected void fetchData() {
-        mCategoryBinding.refLayout.setRefreshing(true);
+        mStateLayout.showLoading();
         onRefresh();
     }
 

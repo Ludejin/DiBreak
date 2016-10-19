@@ -62,4 +62,5 @@ dependencies {
     compile files('libs/tbs_sd_v2.4.0.1073.jar')
 
     compile project(':loadmore')
+    compile project(':progressstatelayout')
 }
