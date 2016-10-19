@@ -20,13 +20,16 @@ import com.zero.dibreak.domain.model.base.BaseResponse;
 import com.zero.dibreak.domain.model.response.ItemInfo;
 import com.zero.dibreak.module.detail.DetailActivity;
 import com.zero.dibreak.view.base.LazyFragment;
+import com.zero.loadmore.LoadMoreListener;
+import com.zero.loadmore.LoadMoreRecyclerView;
 
 /**
  * Created by Jin_ on 2016/10/16
  * 邮箱：Jin_Zboy@163.com
  */
 
-public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener,
+        LoadMoreListener {
 
     private static final String TAG = "CategoryPagerFragment";
 
@@ -37,8 +40,16 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     FragmentCategoryBinding mCategoryBinding;
 
     private int mCategoryType = 0;
+    private int mPage = 130;
+    private boolean isRefresh = true;
 
     private MultiTypeAdapter mMultiTypeAdapter;
+
+    /**
+     * 组件
+     */
+    private LoadMoreRecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public static CategoryPagerFragment newInstance(int position) {
         CategoryPagerFragment fragment = new CategoryPagerFragment();
@@ -57,21 +68,33 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     }
 
     private void init() {
+
+        mRecyclerView = mCategoryBinding.recycleView;
+        mRefreshLayout = mCategoryBinding.refLayout;
+
         mMultiTypeAdapter = new MultiTypeAdapter(_mActivity);
         mMultiTypeAdapter.addViewTypeToLayoutMap(VIEW_TYPE_NORMAL, R.layout.item_category);
         mMultiTypeAdapter.addViewTypeToLayoutMap(VIEW_TYPE_WITH_IMG, R.layout.item_category_img);
-        mCategoryBinding.recycleView.setLayoutManager(new LinearLayoutManager(_mActivity));
+
         mMultiTypeAdapter.setPresenter(new MultiTypeAdapter.Presenter<ItemInfo>() {
             @Override
             public void onItemClick(ItemInfo itemInfo) {
                 Intent intent = new Intent();
                 intent.setClass(_mActivity, DetailActivity.class);
-                intent.putExtra(DetailActivity.EXTRA_URL, itemInfo.getUrl());
+                intent.putExtra(DetailActivity.EXTRA_URL,
+                        itemInfo.getUrl());
                 startActivity(intent);
             }
         });
-        mCategoryBinding.recycleView.setAdapter(mMultiTypeAdapter);
-        mCategoryBinding.refLayout.setOnRefreshListener(this);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+
+        mRecyclerView.setAdapter(mMultiTypeAdapter);
+
+        mRecyclerView.setCanloadMore(true);
+        mRecyclerView.setLoadMoreListener(this);
+
+        mRefreshLayout.setOnRefreshListener(this);
     }
 
     private String getCategoryTypeName(int position) {
@@ -96,6 +119,21 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
         return categoryName;
     }
 
+    private MultiTypeAdapter.MultiViewTyper getMultiViewTyper() {
+        return new MultiTypeAdapter.MultiViewTyper() {
+            @Override
+            public int getViewType(Object item) {
+                if (item instanceof ItemInfo) {
+                    if (((ItemInfo) item).getImages().size() > 0) {
+                        return VIEW_TYPE_WITH_IMG;
+                    }
+                    return VIEW_TYPE_NORMAL;
+                }
+                return 0;
+            }
+        };
+    }
+
     /**
      * 获取数据
      *
@@ -110,20 +148,18 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
                 .subscribe(new DefaultSubscriber<BaseResponse<ItemInfo>>(_mActivity) {
                     @Override
                     public void onNext(BaseResponse<ItemInfo> itemInfoBaseResponse) {
-                        mCategoryBinding.refLayout.setRefreshing(false);
-                        mMultiTypeAdapter.set(itemInfoBaseResponse.getData(),
-                                new MultiTypeAdapter.MultiViewTyper() {
-                                    @Override
-                                    public int getViewType(Object item) {
-                                        if (item instanceof ItemInfo) {
-                                            if (((ItemInfo) item).getImages().size() > 0) {
-                                                return VIEW_TYPE_WITH_IMG;
-                                            }
-                                            return VIEW_TYPE_NORMAL;
-                                        }
-                                        return 0;
-                                    }
-                                });
+                        if (isRefresh) {
+                            mRefreshLayout.setRefreshing(false);
+                            mMultiTypeAdapter.set(itemInfoBaseResponse.getData(), getMultiViewTyper());
+
+                        } else {
+                            if (0 == itemInfoBaseResponse.getData().size()) {
+                                mRecyclerView.loadMoreEnd();
+                            } else {
+                                mMultiTypeAdapter.addAll(itemInfoBaseResponse.getData(), getMultiViewTyper());
+                                mRecyclerView.loadMoreComplete();
+                            }
+                        }
                     }
                 });
     }
@@ -131,7 +167,7 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     @Override
     protected void fetchData() {
         mCategoryBinding.refLayout.setRefreshing(true);
-        getData(15, 1);
+        onRefresh();
     }
 
     @Override
@@ -148,6 +184,14 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        getData(15, 1);
+        mPage = 130;
+        isRefresh = true;
+        getData(15, mPage);
+    }
+
+    @Override
+    public void onLoadMore() {
+        isRefresh = false;
+        getData(15, ++mPage);
     }
 }

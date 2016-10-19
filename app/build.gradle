@@ -60,4 +60,6 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     compile "com.facebook.fresco:fresco:$rootProject.frescoVersion"
     compile files('libs/tbs_sd_v2.4.0.1073.jar')
+
+    compile project(':loadmore')
 }

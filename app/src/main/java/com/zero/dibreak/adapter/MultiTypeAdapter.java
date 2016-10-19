@@ -113,6 +113,10 @@ public class MultiTypeAdapter extends BaseViewAdapter<Object> {
         super.clear();
     }
 
+    public Object getItem(int position) {
+        return mCollection.get(position);
+    }
+
     @LayoutRes
     protected int getLayoutRes(int viewType) {
         return mItemTypeToLayoutMap.get(viewType);
