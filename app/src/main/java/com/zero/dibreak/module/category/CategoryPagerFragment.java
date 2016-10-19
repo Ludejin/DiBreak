@@ -40,7 +40,7 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     FragmentCategoryBinding mCategoryBinding;
 
     private int mCategoryType = 0;
-    private int mPage = 130;
+    private int mPage = 1;
     private boolean isRefresh = true;
 
     private MultiTypeAdapter mMultiTypeAdapter;
@@ -184,7 +184,7 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        mPage = 130;
+        mPage = 1;
         isRefresh = true;
         getData(15, mPage);
     }
