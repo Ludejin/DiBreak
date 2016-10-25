@@ -32,8 +32,9 @@ public class DiApplication extends Application {
         super.onCreate();
         this.sInstance = this;
 
+        Realm.init(this);
         /** 初始化Realm配置 */
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .name(Const.DB_NAME).build();
         Realm.setDefaultConfiguration(realmConfiguration);
