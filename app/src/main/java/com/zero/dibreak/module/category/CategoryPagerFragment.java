@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 import com.zero.dibreak.R;
 import com.zero.dibreak.adapter.MultiTypeAdapter;
 import com.zero.dibreak.app.DiApplication;
-import com.zero.dibreak.data.RepositoryUtils;
 import com.zero.dibreak.databinding.FragmentCategoryBinding;
-import com.zero.dibreak.domain.interactor.DefaultSubscriber;
-import com.zero.dibreak.domain.model.base.BaseResponse;
 import com.zero.dibreak.domain.model.response.ItemInfo;
 import com.zero.dibreak.module.detail.DetailActivity;
 import com.zero.dibreak.view.base.LazyFragment;
@@ -24,13 +21,15 @@ import com.zero.loadmore.LoadMoreListener;
 import com.zero.loadmore.LoadMoreRecyclerView;
 import com.zero.progressstatelayout.ProgressStateLayout;
 
+import java.util.List;
+
 /**
  * Created by Jin_ on 2016/10/16
  * 邮箱：Jin_Zboy@163.com
  */
 
 public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener,
-        LoadMoreListener {
+        LoadMoreListener, CategoryContract.View {
 
     private static final String TAG = "CategoryPagerFragment";
 
@@ -45,6 +44,8 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     private boolean isRefresh = true;
 
     private MultiTypeAdapter mMultiTypeAdapter;
+
+    private CategoryPresenter mCategoryPresenter;
 
     /**
      * 组件
@@ -67,6 +68,12 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
         if (getArguments() != null) {
             mCategoryType = getArguments().getInt(CATEGORY_TYPE);
         }
+        mCategoryPresenter = DaggerCategoryComponent.builder()
+                .categoryModule(new CategoryModule(DiApplication.getInstance().getApplicationComponent()
+                        .getDiService(), _mActivity))
+                .build()
+                .inject();
+        mCategoryPresenter.attachView(this);
     }
 
     private void init() {
@@ -138,6 +145,12 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
         };
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCategoryPresenter.detachView();
+    }
+
     /**
      * 获取数据
      *
@@ -146,37 +159,38 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
      * @see com.zero.dibreak.api.DiApi#getCategoryList(String, int, int)
      */
     private void getData(int pageSize, int page) {
-        DiApplication.getInstance().getApplicationComponent().getDiService()
-                .getDiApi().getCategoryList(getCategoryTypeName(mCategoryType), pageSize, page)
-                .compose(RepositoryUtils.<BaseResponse<ItemInfo>>handleData())
-                .subscribe(new DefaultSubscriber<BaseResponse<ItemInfo>>(_mActivity) {
-                    @Override
-                    public void onNext(BaseResponse<ItemInfo> itemInfoBaseResponse) {
-                        mStateLayout.showSuccess();
-                        if (isRefresh) {
-                            if (0 == itemInfoBaseResponse.getData().size()) {
-                                mStateLayout.showEmpty("没有数据");
-                                return;
-                            }
-                            mRefreshLayout.setRefreshing(false);
-                            mMultiTypeAdapter.set(itemInfoBaseResponse.getData(), getMultiViewTyper());
-                        } else {
-                            if (0 == itemInfoBaseResponse.getData().size()) {
-                                mRecyclerView.loadMoreEnd();
-                            } else {
-                                mMultiTypeAdapter.addAll(itemInfoBaseResponse.getData(), getMultiViewTyper());
-                                mRecyclerView.loadMoreComplete();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (isRefresh) {
-                            mStateLayout.showError();
-                        }
-                    }
-                });
+//        DiApplication.getInstance().getApplicationComponent().getDiService()
+//                .getDiApi().getCategoryList(getCategoryTypeName(mCategoryType), pageSize, page)
+//                .compose(RepositoryUtils.<BaseResponse<ItemInfo>>handleData())
+//                .subscribe(new DefaultSubscriber<BaseResponse<ItemInfo>>(_mActivity) {
+//                    @Override
+//                    public void onNext(BaseResponse<ItemInfo> itemInfoBaseResponse) {
+//                        mStateLayout.showSuccess();
+//                        if (isRefresh) {
+//                            if (0 == itemInfoBaseResponse.getData().size()) {
+//                                mStateLayout.showEmpty("没有数据");
+//                                return;
+//                            }
+//                            mRefreshLayout.setRefreshing(false);
+//                            mMultiTypeAdapter.set(itemInfoBaseResponse.getData(), getMultiViewTyper());
+//                        } else {
+//                            if (0 == itemInfoBaseResponse.getData().size()) {
+//                                mRecyclerView.loadMoreEnd();
+//                            } else {
+//                                mMultiTypeAdapter.addAll(itemInfoBaseResponse.getData(), getMultiViewTyper());
+//                                mRecyclerView.loadMoreComplete();
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        if (isRefresh) {
+//                            mStateLayout.showError();
+//                        }
+//                    }
+//                });
+        mCategoryPresenter.getData(getCategoryTypeName(mCategoryType), pageSize, page);
     }
 
     @Override
@@ -208,5 +222,32 @@ public class CategoryPagerFragment extends LazyFragment implements SwipeRefreshL
     public void onLoadMore() {
         isRefresh = false;
         getData(15, ++mPage);
+    }
+
+    @Override
+    public void loadData(List<ItemInfo> items) {
+        mStateLayout.showSuccess();
+        if (isRefresh) {
+            if (0 == items.size()) {
+                mStateLayout.showEmpty("没有数据");
+                return;
+            }
+            mRefreshLayout.setRefreshing(false);
+            mMultiTypeAdapter.set(items, getMultiViewTyper());
+        } else {
+            if (0 == items.size()) {
+                mRecyclerView.loadMoreEnd();
+            } else {
+                mMultiTypeAdapter.addAll(items, getMultiViewTyper());
+                mRecyclerView.loadMoreComplete();
+            }
+        }
+    }
+
+    @Override
+    public void onError() {
+        if (isRefresh) {
+            mStateLayout.showError();
+        }
     }
 }
